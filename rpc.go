@@ -31,13 +31,16 @@ func GetRank(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runtime.
 		targetId = AUGUST_LEADERBOARD
 	}
 
-	records, _, _, _, err := nk.LeaderboardRecordsList(ctx, targetId, []string{userID}, 50, "", int64(0))
+	records, ownerRecords, _, _, err := nk.LeaderboardRecordsList(ctx, targetId, []string{userID}, 50, "", int64(0))
 
 	if err != nil {
 		return "", err
 	}
 
-	recordsJson, err := json.Marshal(records)
+	recordsJson, err := json.Marshal(PackMessage{
+		"records": records,
+		"owner":   ownerRecords,
+	})
 
 	if err != nil {
 		return "", err
