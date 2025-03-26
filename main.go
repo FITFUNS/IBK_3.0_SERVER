@@ -15,6 +15,8 @@ func InitModule(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runti
 	nk.LeaderboardCreate(ctx, OCTOBER_LEADERBOARD, true, "desc", "set", "", map[string]interface{}{}, true)
 	nk.LeaderboardCreate(ctx, GENERAL_LEADERBOARD, true, "desc", "set", "", map[string]interface{}{}, true)
 
+	initializer.RegisterAfterAuthenticateCustom(AfterAuthenticate)
+
 	initializer.RegisterRpc("remove", RemoveAccount)
 	initializer.RegisterRpc("get_rank", GetRank)
 	initializer.RegisterRpc("submit_water_rank", SubmitWaterRank)
