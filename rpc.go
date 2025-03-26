@@ -37,9 +37,9 @@ func GetRank(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runtime.
 		return "", err
 	}
 
-	recordsJson, err := json.Marshal(PackMessage{
-		"res":   records,
-		"owner": ownerRecords,
+	recordsJson, err := json.Marshal([]interface{}{
+		records,
+		ownerRecords,
 	})
 
 	if err != nil {
