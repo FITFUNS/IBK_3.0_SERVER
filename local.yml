@@ -1,0 +1,16 @@
+logger:
+  level: "INFO"
+socket:
+  outgoing_queue_size: 256
+  max_message_size_bytes: 4096
+  max_request_size_bytes: 131072
+matchmaker:
+  max_tickets: 1
+  interval_sec: 5
+  max_intervals: 2
+social:
+  apple:
+    bundle_id: QHX67Z36QX
+runtime:
+  env:
+    - TEST=TEST
