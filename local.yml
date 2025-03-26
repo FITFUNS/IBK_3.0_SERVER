@@ -8,9 +8,9 @@ matchmaker:
   max_tickets: 1
   interval_sec: 5
   max_intervals: 2
-social:
-  apple:
-    bundle_id: QHX67Z36QX
+# social:
+#   apple:
+#     bundle_id: QHX67Z36QX
 runtime:
   env:
     - TEST=TEST
