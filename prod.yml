@@ -9,5 +9,6 @@ matchmaker:
   interval_sec: 5
   max_intervals: 2
 runtime:
+  path: "/home/admin/main.ibkmeta.link"
   env:
     - TEST=TEST
