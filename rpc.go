@@ -138,7 +138,7 @@ func SubmitGummyRank(ctx context.Context, logger runtime.Logger, db *sql.DB, nk 
 		account.User.DisplayName+"#"+account.User.Username, updated[GENERAL_POINT], 0, nil, nil)
 
 	updated["earn"] = score
-	updated["best"] = metadata[GUMMY_BEST].(int64)
+	updated["best"] = int64(metadata[GUMMY_BEST].(float64))
 
 	res, err := json.Marshal(updated)
 	if err != nil {
@@ -213,7 +213,7 @@ func SubmitWaterRank(ctx context.Context, logger runtime.Logger, db *sql.DB, nk 
 		account.User.DisplayName+"#"+account.User.Username, updated[GENERAL_POINT], 0, nil, nil)
 
 	updated["earn"] = score
-	updated["best"] = metadata[WATER_BEST].(int64)
+	updated["best"] = int64(metadata[WATER_BEST].(float64))
 
 	res, err := json.Marshal(updated)
 	if err != nil {
