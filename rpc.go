@@ -112,7 +112,7 @@ func SubmitGummyRank(ctx context.Context, logger runtime.Logger, db *sql.DB, nk 
 
 	score := int64(0)
 
-	decodedScore := data["score"].(int)
+	decodedScore := data["score"].(float64)
 	if decodedScore < 1 {
 		score = 550
 	} else if decodedScore <= 20 {
@@ -183,7 +183,7 @@ func SubmitWaterRank(ctx context.Context, logger runtime.Logger, db *sql.DB, nk 
 
 	score := int64(0)
 
-	decodedScore := data["score"].(int)
+	decodedScore := data["score"].(float64)
 	if decodedScore <= 20 {
 		score = 60
 	} else if decodedScore <= 40 {
@@ -256,7 +256,7 @@ func SubmitMelonRank(ctx context.Context, logger runtime.Logger, db *sql.DB, nk 
 		return "", err
 	}
 
-	decodedScore := data["score"].(int64)
+	decodedScore := int64(data["score"].(float64))
 
 	updated, _, _ := nk.WalletUpdate(ctx, userID, ChangSet{
 		GENERAL_POINT: decodedScore,
