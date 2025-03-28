@@ -9,6 +9,36 @@ import (
 	"github.com/heroiclabs/nakama-common/runtime"
 )
 
+func GetMatchId(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runtime.NakamaModule, payload string) (string, error) {
+	limit := 10
+	authoritative := true
+	label := payload
+	minSize := 0
+	maxSize := 30
+
+	matches, err := nk.MatchList(ctx, limit, authoritative, label, &minSize, &maxSize, "")
+
+	if err != nil {
+		logger.Error("error : %v", err)
+
+		return "", err
+	}
+
+	if len(matches) > 0 {
+		return matches[0].MatchId, nil
+	}
+
+	matchId, err := nk.MatchCreate(ctx, payload, nil)
+
+	if err != nil {
+		logger.Error("error : %v", err)
+
+		return "", err
+	}
+
+	return matchId, nil
+}
+
 func RemoveAccount(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runtime.NakamaModule, payload string) (string, error) {
 	userID, _ := ctx.Value(runtime.RUNTIME_CTX_USER_ID).(string)
 

@@ -10,6 +10,8 @@ import (
 func InitModule(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runtime.NakamaModule, initializer runtime.Initializer) error {
 	logger.Info("Hello World!")
 
+	initializer.RegisterMatch(MATCH_LABEL, newMatch)
+
 	nk.LeaderboardCreate(ctx, AUGUST_LEADERBOARD, true, "desc", "set", "", map[string]interface{}{}, true)
 	nk.LeaderboardCreate(ctx, SEPTEMBER_LEADERBOARD, true, "desc", "set", "", map[string]interface{}{}, true)
 	nk.LeaderboardCreate(ctx, OCTOBER_LEADERBOARD, true, "desc", "set", "", map[string]interface{}{}, true)
@@ -17,6 +19,7 @@ func InitModule(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runti
 
 	initializer.RegisterAfterAuthenticateCustom(AfterAuthenticate)
 
+	initializer.RegisterRpc("get_match_id", GetMatchId)
 	initializer.RegisterRpc("remove", RemoveAccount)
 	initializer.RegisterRpc("get_rank", GetRank)
 	initializer.RegisterRpc("submit_water_rank", SubmitWaterRank)

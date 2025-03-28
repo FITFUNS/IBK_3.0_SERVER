@@ -21,4 +21,9 @@ const (
 	TOTAL_OCTOBER         = "TOTAL_OCTOBER"
 	TOTAL_GENERAL         = "TOTAL_GENERAL"
 	LOGIN_COUNT           = "LOGIN_COUNT"
+
+	MAX_DISTANCE float64 = 30
+	TICK_RATE    int     = 60
+
+	MATCH_LABEL = "world"
 )
