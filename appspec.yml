@@ -1,0 +1,24 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/admin/main.ibk.link
+    overwrite: true
+file_exists_behavior: OVERWRITE
+
+permissions:
+  - object: /
+    pattern: "**"
+    owner: admin
+    group: admin
+
+hooks:
+  # BeforeInstall:
+  #   - location: scripts/install_dependencies.sh
+  #     timeout: 300
+  #     runas: admin
+
+  AfterInstall:
+    - location: scripts/restart_server.sh
+      timeout: 300
+      runas: admin

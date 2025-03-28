@@ -1,0 +1,70 @@
+name: deploy
+
+on:
+  push:
+    branches: [deploy]
+  pull_request:
+    branches: [deploy]
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux]
+        goarch: [arm64]
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Go 설정
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.2
+      - name: ARM64 크로스 컴파일러 설치
+        run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
+      - name: 의존성 설치
+        run: go mod tidy
+
+        # - name: 다중 플랫폼 빌드
+        #   run: |
+        #     GO111MODULE=on CGO_ENABLED=1 GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build --trimpath --buildmode=plugin -o ./backend.so
+      - name: GO 플러그인 빌드 (ARM64)
+        run: |
+          CGO_ENABLED=1 GOOS=linux GOARCH=arm64 \
+          CC=aarch64-linux-gnu-gcc go build --trimpath --buildmode=plugin -o ./backend.so
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::381492071574:role/githubaction-fitfuns
+          role-session-name: GitHubActions
+          aws-region: ap-northeast-2
+      # - name: Make modules
+      #   run: |
+      #     cp ./*.lua ./modules
+      #     cp -r csv/*.csv ./modules
+      #     ls -la ./modules
+
+      # - name: Replace secrets in config.yml
+      #   run: |
+      #     sed -i 's|bundle_id:.*|bundle_id: "${{ secrets.BUNDLE_ID }}"|' prod.yml
+      #     sed -i 's|shared_password:.*|shared_password: "${{ secrets.IAP_APPLE_SHARED_PASSWORD }}"|' prod.yml
+      #     sed -i 's|client_email:.*|client_email: "${{ secrets.IAP_GOOGLE_CLIENT_EMAIL }}"|' prod.yml
+      #     sed -i 's|private_key:.*|private_key: ${{ secrets.IAP_GOOGLE_PRIVATE_KEY }}|' prod.yml
+      #   shell: bash
+
+      - name: Zip build folder
+        run: zip -r backend.zip ./scripts ./appspec.yml ./prod.yml ./backend.so
+
+      - name: Upload to S3
+        run: aws s3 cp backend.zip s3://main-ibk/CodeDeploy/main.ibkmeta.link/backend.zip
+      - name: Deploy to CodeDeploy
+        run: |
+          aws deploy create-deployment \
+            --application-name main_ibk \
+            --deployment-group-name Production \
+            --s3-location bucket=main-ibk,key=CodeDeploy/main.ibkmeta.link/backend.zip,bundleType=zip
