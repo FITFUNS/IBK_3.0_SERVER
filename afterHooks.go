@@ -72,7 +72,7 @@ func AfterAuthenticate(ctx context.Context, logger runtime.Logger, db *sql.DB, n
 		randIndex := rand.Intn(len(Names)) // 올바른 랜덤 인덱스 생성
 		randomName := Names[randIndex]
 		nk.AccountUpdateId(ctx, userId, nilString, metadata, randomName, nilString, nilString, nilString, nilString)
-		// nk.LinkDevice(ctx, userId, userId)
+		nk.LinkDevice(ctx, userId, userId)
 		changeSet[GENERAL_POINT] = 0
 		changeSet[AUGUST_POINT] = 0
 		changeSet[SEPTEMBER_POINT] = 0
