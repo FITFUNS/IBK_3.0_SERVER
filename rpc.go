@@ -137,8 +137,14 @@ func SubmitGummyRank(ctx context.Context, logger runtime.Logger, db *sql.DB, nk 
 	nk.LeaderboardRecordWrite(ctx, GENERAL_LEADERBOARD, userID,
 		account.User.DisplayName+"#"+account.User.Username, updated[GENERAL_POINT], 0, nil, nil)
 
+	best, ok := metadata[GUMMY_BEST]
+
+	if !ok {
+		best = float64(0)
+	}
+
 	updated["earn"] = score
-	updated["best"] = int64(metadata[GUMMY_BEST].(float64))
+	updated["best"] = int64(best.(float64))
 
 	res, err := json.Marshal(updated)
 	if err != nil {
@@ -212,8 +218,15 @@ func SubmitWaterRank(ctx context.Context, logger runtime.Logger, db *sql.DB, nk 
 	nk.LeaderboardRecordWrite(ctx, GENERAL_LEADERBOARD, userID,
 		account.User.DisplayName+"#"+account.User.Username, updated[GENERAL_POINT], 0, nil, nil)
 
+	best, ok := metadata[WATER_BEST]
+
+	if !ok {
+		best = float64(0)
+	}
+
 	updated["earn"] = score
-	updated["best"] = int64(metadata[WATER_BEST].(float64))
+
+	updated["best"] = int64(best.(float64))
 
 	res, err := json.Marshal(updated)
 	if err != nil {
@@ -268,8 +281,14 @@ func SubmitMelonRank(ctx context.Context, logger runtime.Logger, db *sql.DB, nk 
 	nk.LeaderboardRecordWrite(ctx, GENERAL_LEADERBOARD, userID,
 		account.User.DisplayName+"#"+account.User.Username, updated[GENERAL_POINT], 0, nil, nil)
 
+	best, ok := metadata[MELON_BEST]
+
+	if !ok {
+		best = float64(0)
+	}
+
 	updated["earn"] = decodedScore
-	updated["best"] = metadata[WATER_BEST].(int64)
+	updated["best"] = int64(best.(float64))
 
 	res, err := json.Marshal(updated)
 	if err != nil {
